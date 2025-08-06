@@ -34,7 +34,7 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
   jsonData["firma"] = firma;
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycby4_UJHR5VJA4bGK5IpWWM8R_2yA-v2c-sLMLXddY2V7W0F4Taz7mLjtxpkNM_z391QhA/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxZ4S_KFmdF8swTlgyC73oUAI6JZVqK89M9FuZFqIOU7q6ysDxALXDxxL6tKByh4llfGQ/exec", {
       method: "POST",
       body: JSON.stringify(jsonData),
       headers: { "Content-Type": "application/json" }
