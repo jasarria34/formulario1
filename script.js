@@ -1,54 +1,68 @@
-
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("firma");
 const ctx = canvas.getContext("2d");
-let drawing = false;
+let dibujando = false;
 
-canvas.addEventListener("mousedown", () => drawing = true);
-canvas.addEventListener("mouseup", () => drawing = false);
+canvas.addEventListener("mousedown", () => dibujando = true);
+canvas.addEventListener("mouseup", () => dibujando = false);
+canvas.addEventListener("mouseout", () => dibujando = false);
 canvas.addEventListener("mousemove", dibujar);
 
 function dibujar(e) {
-  if (!drawing) return;
+  if (!dibujando) return;
+  const rect = canvas.getBoundingClientRect();
   ctx.lineWidth = 2;
   ctx.lineCap = "round";
   ctx.strokeStyle = "#000";
-  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
+  ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
 }
 
 function limpiarFirma() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-document.getElementById("formulario").addEventListener("submit", async (e) => {
+document.getElementById("bitacoraForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
-  const firma = canvas.toDataURL();
-  formData.append("firma", firma);
+  const data = new FormData(this);
+  const firma = canvas.toDataURL("image/png");
 
-  const jsonData = {};
-  formData.forEach((value, key) => jsonData[key] = value);
-  jsonData["firma"] = firma;
+  const payload = {
+    fecha: data.get("fecha"),
+    hora1: data.get("hora1"),
+    hora2: data.get("hora2"),
+    piloto: data.get("piloto"),
+    modelo: data.get("modelo"),
+    origen: data.get("origen"),
+    destino: data.get("destino"),
+    duracion: data.get("duracion"),
+    maniobras: data.get("maniobras"),
+    firma: firma
+  };
+
+  const URL = "https://script.google.com/macros/s/AKfycbzR31gOQf9rhlmGPXW6lcTKe0iKAmqiJ_Mr3Uw67fbl3mlVo6eW8Jt_QIdHfj9SbiigUA/exec";
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbxZ4S_KFmdF8swTlgyC73oUAI6JZVqK89M9FuZFqIOU7q6ysDxALXDxxL6tKByh4llfGQ/exec", {
+    const res = await fetch(URL, {
       method: "POST",
-      body: JSON.stringify(jsonData),
-      headers: { "Content-Type": "application/json" }
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
 
-    const result = await response.json();
-    if (result.success) {
-      alert("Formulario enviado correctamente.");
-      e.target.reset();
+    const json = await res.json();
+    if (json.success) {
+      alert("Bitácora enviada con éxito.");
+      this.reset();
       limpiarFirma();
     } else {
-      alert("Error: " + result.error);
+      alert("Error: " + json.error);
     }
-  } catch (error) {
-    alert("Error de red al enviar el formulario.");
+  } catch (err) {
+    alert("Error al enviar: " + err.message);
   }
 });
+
