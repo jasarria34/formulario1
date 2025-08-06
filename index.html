@@ -12,7 +12,29 @@
       <img src="logo.png" alt="JAKTECH Logo"  class="logo"/>
       <h1>Bitácora de Vuelos</h1>
       <p class="slogan">Ideas que vuelan...</p>
-      </header>
+    </header>
+    <form id="flightForm">
+      <label>Fecha del vuelo:<input type="date" name="fecha" required /></label>
+      <label>Piloto:<input type="text" name="piloto" required /></label>
+      <label>Aeronave:<input type="text" name="aeronave" required /></label>
+      <label>Origen:<input type="text" name="origen" required /></label>
+      <label>Destino:<input type="text" name="destino" required /></label>
+      <label>Duración:<input type="text" name="duracion" required /></label>
+      <label>Observaciones:<textarea name="observaciones"></textarea></label>
+
+      <div class="firma">
+        <p>Firma:</p>
+        <canvas id="canvas" width="300" height="100"></canvas><br>
+        <button type="button" id="clear">Borrar firma</button>
+      </div>
+
+      <button type="submit">Guardar vuelo</button>
+    </form>
+    <div id="estado"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
     <form id="flightForm">
       <label for="fecha">Fecha del vuelo:</label>
       <input type="date" id="fecha" name="fecha" required />
