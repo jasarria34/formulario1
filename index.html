@@ -12,9 +12,7 @@
       <img src="logo.png" alt="JAKTECH Logo"  class="logo"/>
       <h1>Bitácora de Vuelos</h1>
       <p class="slogan">Ideas que vuelan...</p>
-  <div class="container">
-    <h1>Bitácora de Vuelo</h1>
-    <p class="note">Al enviar este formulario, se registrarán los datos y se generará un PDF con la firma incluida.</p>
+      </header>
     <form id="flightForm">
       <input type="date" name="fecha" required placeholder="Fecha" />
       <input type="time" name="hora1" required placeholder="Hora de salida" />
@@ -25,8 +23,10 @@
       <input type="text" name="destino" required placeholder="Destino" />
       <input type="text" name="duracion" required placeholder="Duración" />
       <input type="text" name="maniobras" placeholder="Maniobras" />
-      <label>Firma:</label>
-      <canvas id="canvas"></canvas>
+     
+      <div class="firma">
+      <p>Firma:</p>
+      <canvas id="canvas"></canvas><br>
       <button type="button" id="clear">Borrar firma</button>
       <button type="submit">Enviar</button>
     </form>
