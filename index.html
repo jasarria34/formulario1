@@ -15,24 +15,18 @@
       </header>
     <form id="flightForm">
       <label for="fecha">Fecha del vuelo:</label>
-      <input type="date" name="fecha" required placeholder="Fecha" />
+      <input type="date" id="fecha" name="fecha" required />
       <label for="Hora1">Hora inicio:</label>
-      <input type="time" name="hora1" required placeholder="Hora de salida" />
+      <input type="time" id="Hora de Inicio" name="Hora1" required />
       <label for="Hora2">Hora Final:</label>
-      <input type="time" name="hora2" required placeholder="Hora de llegada" />
+      <input type="time" id="Hora2" name="Hora2" required />
       <label for="piloto">Piloto:</label>
-      <input type="text" name="piloto" required placeholder="Piloto" />
-      <label>Modelo de vuelo :<input type="text" name="modelo" required /></label>
-      <input type="text" name="modelo" required placeholder="Modelo" />
+      <input type="text" id="piloto" name="piloto" required />
+      <label>Modelo de vuelo :<input type="text" name="aeronave" required /></label>
       <label>Origen:<input type="text" name="origen" required /></label>
-      <input type="text" name="origen" required placeholder="Origen" />
       <label>Destino:<input type="text" name="destino" required /></label>
-      <input type="text" name="destino" required placeholder="Destino" />
       <label>Duración:<input type="text" name="duracion" required /></label>
-      <input type="text" name="duracion" required placeholder="Duración" />
-      <label>Maniobras Realizadas:<textarea name="maniobras"></textarea></label>
-      <input type="text" name="maniobras" placeholder="Maniobras" />
-     
+      <label>Maniobras Realizadas:<textarea name="observaciones"></textarea></label>
       <div class="firma">
       <p>Firma:</p>
       <canvas id="canvas"></canvas><br>
