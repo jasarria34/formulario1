@@ -1,96 +1,54 @@
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const clearBtn = document.getElementById("clear");
+let drawing = false;
 
-function resizeCanvas() {
-  canvas.width = canvas.offsetWidth;
-  canvas.height = 150;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+canvas.addEventListener("mousedown", () => drawing = true);
+canvas.addEventListener("mouseup", () => drawing = false);
+canvas.addEventListener("mousemove", dibujar);
 
-let isDrawing = false;
-
-function getPos(e) {
-  const rect = canvas.getBoundingClientRect();
-  if (e.touches && e.touches.length > 0) {
-    return {
-      x: e.touches[0].clientX - rect.left,
-      y: e.touches[0].clientY - rect.top
-    };
-  } else {
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
-  }
-}
-
-function startDraw(e) {
-  e.preventDefault();
-  isDrawing = true;
-  const pos = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(pos.x, pos.y);
-}
-
-function draw(e) {
-  if (!isDrawing) return;
-  e.preventDefault();
-  const pos = getPos(e);
-  ctx.lineTo(pos.x, pos.y);
+function dibujar(e) {
+  if (!drawing) return;
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "#000";
+  ctx.lineTo(e.offsetX, e.offsetY);
   ctx.stroke();
-}
-
-function stopDraw(e) {
-  if (!isDrawing) return;
-  e.preventDefault();
-  isDrawing = false;
-}
-
-canvas.addEventListener("mousedown", startDraw);
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseup", stopDraw);
-canvas.addEventListener("mouseleave", stopDraw);
-canvas.addEventListener("touchstart", startDraw);
-canvas.addEventListener("touchmove", draw);
-canvas.addEventListener("touchend", stopDraw);
-
-clearBtn.addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
-});
+  ctx.moveTo(e.offsetX, e.offsetY);
+}
 
-document.getElementById("flightForm").addEventListener("submit", async function (e) {
+function limpiarFirma() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+document.getElementById("formulario").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const form = e.target;
-  const firma = canvas.toDataURL("image/png");
+  const formData = new FormData(e.target);
+  const firma = canvas.toDataURL();
+  formData.append("firma", firma);
 
-  const data = {
-    fecha: form.fecha.value,
-    hora1: form.hora1.value,
-    hora2: form.hora2.value,
-    piloto: form.piloto.value,
-    modelo: form.modelo.value,
-    origen: form.origen.value,
-    destino: form.destino.value,
-    duracion: form.duracion.value,
-    maniobras: form.maniobras.value,
-    firma: firma
-  };
+  const jsonData = {};
+  formData.forEach((value, key) => jsonData[key] = value);
+  jsonData["firma"] = firma;
 
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycby8zQTef9qP74nEnxZaeUAeb2oP2fnu-FXawInyDMdD2eZEMmOgyjINYziwXRpk3G78CQ/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbzU92i3Dr8PvSyJyrImbPj27snscProsdU4hOXYWu4XkSfXK8DPa2XUz8cTozRx5-LzXQ/exec", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      body: JSON.stringify(jsonData),
+      headers: { "Content-Type": "application/json" }
     });
 
-    document.getElementById("estado").textContent = "Vuelo guardado correctamente.";
-    this.reset();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const result = await response.json();
+    if (result.success) {
+      alert("Formulario enviado correctamente.");
+      e.target.reset();
+      limpiarFirma();
+    } else {
+      alert("Error: " + result.error);
+    }
   } catch (error) {
-    document.getElementById("estado").textContent = "Error al guardar: " + error.message;
+    alert("Error de red al enviar el formulario.");
   }
 });
