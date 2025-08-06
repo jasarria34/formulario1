@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #f0f8ff, #dbe9f4);
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  text-align: center;
+}
+form input, form button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.6rem;
+  font-size: 1rem;
+}
+canvas {
+  width: 100%;
+  height: 150px;
+  border: 1px solid #ccc;
+  background: #fff;
+  margin-bottom: 1rem;
+}
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0056b3;
+}
+#estado {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: green;
+  text-align: center;
+}
+
+.note {
+  font-size: 0.95rem;
+  background-color: #e8f4fa;
+  padding: 0.5rem;
+  border-left: 4px solid #007bff;
+  margin-bottom: 1rem;
+  color: #333;
+}

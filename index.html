@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitácora de Vuelo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Bitácora de Vuelo</h1>
+    <p class="note">Al enviar este formulario, se registrarán los datos y se generará un PDF con la firma incluida.</p>
+    <form id="flightForm">
+      <input type="date" name="fecha" required placeholder="Fecha" />
+      <input type="time" name="hora1" required placeholder="Hora de salida" />
+      <input type="time" name="hora2" required placeholder="Hora de llegada" />
+      <input type="text" name="piloto" required placeholder="Piloto" />
+      <input type="text" name="modelo" required placeholder="Modelo" />
+      <input type="text" name="origen" required placeholder="Origen" />
+      <input type="text" name="destino" required placeholder="Destino" />
+      <input type="text" name="duracion" required placeholder="Duración" />
+      <input type="text" name="maniobras" placeholder="Maniobras" />
+      <label>Firma:</label>
+      <canvas id="canvas"></canvas>
+      <button type="button" id="clear">Borrar firma</button>
+      <button type="submit">Enviar</button>
+    </form>
+    <p id="estado"></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
