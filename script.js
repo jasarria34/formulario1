@@ -59,7 +59,7 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
       this.reset();
       limpiarFirma();
     } else {
-      alert("Error: " + json.error);
+      alert("Error del servidor: " + json.error);
     }
   } catch (err) {
     alert("Error al enviar: " + err.message);
