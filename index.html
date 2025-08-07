@@ -4,79 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bitácora de Vuelo</title>
-  <style>
-    body { font-family: Arial; padding: 1em; }
-    input, textarea { width: 100%; margin-bottom: 1em; padding: 0.5em; }
-    canvas { border: 1px solid #000; width: 100%; height: 150px; touch-action: none; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Bitácora de Vuelo</h2>
-  <form id="form">
-    <input type="date" name="fecha" required />
-    <input type="time" name="hora_salida" required />
-    <input type="time" name="hora_llegada" required />
-    <input type="text" name="piloto" placeholder="Piloto" required />
-    <input type="text" name="modelo" placeholder="Modelo de avión" required />
-    <input type="text" name="origen" placeholder="Origen" required />
-    <input type="text" name="destino" placeholder="Destino" required />
-    <input type="text" name="duracion" placeholder="Duración" required />
-    <textarea name="maniobras" placeholder="Maniobras realizadas" required></textarea>
-
-    <label>Firma:</label>
-    <canvas id="firma"></canvas>
-    <button type="button" onclick="limpiar()">Limpiar Firma</button>
-
-    <button type="submit">Enviar</button>
-  </form>
-
-  <script>
-    const canvas = document.getElementById("firma");
-    const ctx = canvas.getContext("2d");
-    let isDrawing = false;
-
-    canvas.addEventListener("pointerdown", () => isDrawing = true);
-    canvas.addEventListener("pointerup", () => isDrawing = false);
-    canvas.addEventListener("pointermove", draw);
-
-    function draw(e) {
-      if (!isDrawing) return;
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      const rect = canvas.getBoundingClientRect();
-      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-    }
-
-    function limpiar() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    document.getElementById("form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const data = Object.fromEntries(new FormData(form));
-      data.firma = canvas.toDataURL();
-
-      const url = "https://script.google.com/macros/s/AKfycbyLrwP1U80dxHpfw2qBzVfvt8HrvS6Qjznd0YMQqv8OXD6rwdmr32Xnzq_SyydrDRtccA/exec"; // <---- Pega aquí tu URL del Apps Script
-
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
-      });
-
-      const result = await res.json();
-      if (result.status === "success") {
-        alert("Bitácora registrada. Enlace PDF: " + result.pdfUrl);
-      } else {
-        alert("Error: " + result.message);
-      }
-    });
-  </script>
+  <div class="container">
+    <img src="logo.png" class="logo" alt="Logo JAKTECH">
+    <h1>Bitácora de Vuelo</h1>
+    <form id="bitacoraForm">
+      <input type="date" name="fecha" required>
+      <input type="time" name="hora1" required placeholder="Hora de Salida">
+      <input type="time" name="hora2" required placeholder="Hora de Llegada">
+      <input type="text" name="piloto" placeholder="Piloto" required>
+      <input type="text" name="modelo" placeholder="Modelo de Avión" required>
+      <input type="text" name="origen" placeholder="Origen" required>
+      <input type="text" name="destino" placeholder="Destino" required>
+      <input type="text" name="duracion" placeholder="Duración (HH:MM)" required>
+      <textarea name="maniobras" placeholder="Maniobras realizadas"></textarea>
+      <p>Firma del piloto:</p>
+      <canvas id="firma" width="300" height="100" style="border:1px solid #000"></canvas>
+      <br>
+      <button type="button" onclick="limpiarFirma()">Limpiar firma</button>
+      <br><br>
+      <button type="submit">Enviar Bitácora</button>
+    </form>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
+
 
    
