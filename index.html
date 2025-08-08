@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bitácora de Vuelos - JAKTECH</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container">
     <header>
-      <img src="logo.png" alt="Logo JAKTECH" class="logo"/>
+      <img src="logo.png" alt="Logo JAKTECH" class="logo" />
       <h1>Bitácora de Vuelos</h1>
       <p class="slogan">Ideas que vuelan...</p>
     </header>
@@ -23,15 +23,19 @@
       <label>Destino: <input type="text" name="destino" required /></label>
       <label>Duración: <input type="text" name="duracion" required /></label>
       <label>Maniobras: <textarea name="maniobras" required></textarea></label>
-      <label>Firma: <canvas id="firma" width="300" height="100" style="border:1px solid #000;"></canvas></label>
+      <label>Firma:
+        <canvas id="firma" width="300" height="100" style="border:1px solid #000;"></canvas>
+      </label>
       <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
-      <label>Imagen: <input type="file" name="imagen" accept="image/*" /></label>
+      <label>Imagen (Opcional): <input type="file" name="imagen" id="imagen" accept="image/*" /></label>
+      
       <input type="hidden" name="firmaImagen" id="firmaImagen" />
-      <button type="submit">Enviar</button>
+      <input type="hidden" name="imagenBase64" id="imagenBase64" />
+
+      <button type="submit" id="submitBtn">Enviar</button>
     </form>
     <div id="respuesta"></div>
   </div>
   <script src="script.js"></script>
 </body>
 </html>
-
