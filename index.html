@@ -1,94 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
- <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bitácora de Vuelos - JAKTECH</title>
-  <link rel="stylesheet" href="styles.css" />
-   
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitácora de Vuelo - JAKTECH</title>
+    <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
  <div class="container">
-  <header class="container">
-     <img src="logo.png" alt="JAKTECH Logo"  class="logo"/>
-      <h1>Bitácora de Vuelos</h1>
-      <p class="slogan">Ideas que vuelan...</p>
+    <header class="container">
+        <img src="logo.png" alt="JAKTECH Logo" class="logo" />
+        <h1>Bitácora de Vuelo</h1>
+        <p class="slogan">Ideas que vuelan...</p>
     </header>
-  <form id="flightForm">
-    <label>Fecha: <input type="date" name="fecha" required></label>
-    <label>Hora salida: <input type="time" name="horaSalida" required></label>
-    <label>Hora llegada: <input type="time" name="horaLlegada" required></label>
-    <label>Piloto: <input type="text" name="piloto" required></label>
-    <label>Modelo: <input type="text" name="modelo" required></label>
-    <label>Origen: <input type="text" name="origen" required></label>
-    <label>Destino: <input type="text" name="destino" required></label>
-    <label>Duración: <input type="text" name="duracion" required></label>
-    <label>Maniobras: <textarea name="maniobras" required></textarea></label>
-  <div class="firma">
-    <p>Firma:</p>
-    <canvas id="canvas" width="300" height="100"></canvas><br>
-    <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
-  </div>
-
-    <input type="hidden" name="firmaData" id="firmaData">
-    <button type="submit">Enviar</button>
-  </form>
-
-  <script>
-    const canvas = document.getElementById('firma');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-
-    const resize = () => {
-      const imageData = canvas.toDataURL();
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0);
-      img.src = imageData;
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; });
-    canvas.addEventListener('touchend', () => drawing = false);
-    canvas.addEventListener('touchmove', draw);
-
-    function draw(e) {
-      if (!drawing) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    }
-
-    function limpiarFirma() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-    }
-
-    document.getElementById("flightForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      document.getElementById("firmaData").value = canvas.toDataURL();
-      const formData = new FormData(this);
-      fetch("https://script.google.com/macros/s/AKfycbwDj-B9wBGSXabbpijg47phIbMdrSrcedq54YdzaCssDJyFt6XVHWqeejle2qZO7l1OdQ/execc", {
-        method: "POST",
-        body: formData,
-      })
-      .then(res => res.text())
-      .then(alert)
-      .catch(err => alert("Error: " + err));
-    });
-  </script>
+        <form id="flightForm">
+            <label>Fecha: <input type="date" name="fecha" required /></label>
+            <label>Hora salida: <input type="time" name="hora_salida" required /></label>
+            <label>Hora llegada: <input type="time" name="hora_llegada" required /></label>
+            <label>Piloto: <input type="text" name="piloto" required /></label>
+            <label>Modelo: <input type="text" name="modelo" required /></label>
+            <label>Origen: <input type="text" name="origen" required /></label>
+            <label>Destino: <input type="text" name="destino" required /></label>
+            <label>Duración: <input type="text" name="duracion" required /></label>
+            <label>Maniobras: <textarea name="maniobras" required></textarea></label>
+            
+       	    <label>Firma: <canvas id="signature-pad" width="300" height="100"></canvas></label>
+            <button type="button" id="clear">Limpiar Firma</button>
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+    <footer>
+        <p>© JAKTECH - Generado el <span id="fecha-generacion"></span></p>
+    </footer>
+    <script src="js/script.js"></script>
 </body>
 </html>
 
