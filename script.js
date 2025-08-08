@@ -1,68 +1,55 @@
-const canvas = document.getElementById("firma");
-const ctx = canvas.getContext("2d");
-let dibujando = false;
+    const canvas = document.getElementById('firma');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
 
-canvas.addEventListener("mousedown", () => dibujando = true);
-canvas.addEventListener("mouseup", () => dibujando = false);
-canvas.addEventListener("mouseout", () => dibujando = false);
-canvas.addEventListener("mousemove", dibujar);
+    const resize = () => {
+      const imageData = canvas.toDataURL();
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0);
+      img.src = imageData;
+    };
 
-function dibujar(e) {
-  if (!dibujando) return;
-  const rect = canvas.getBoundingClientRect();
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
-  ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-}
+    window.addEventListener('resize', resize);
+    resize();
 
-function limpiarFirma() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; });
+    canvas.addEventListener('touchend', () => drawing = false);
+    canvas.addEventListener('touchmove', draw);
 
-document.getElementById("bitacoraForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const data = new FormData(this);
-  const firma = canvas.toDataURL("image/png");
-
-  const payload = {
-    fecha: data.get("fecha"),
-    hora1: data.get("hora1"),
-    hora2: data.get("hora2"),
-    piloto: data.get("piloto"),
-    modelo: data.get("modelo"),
-    origen: data.get("origen"),
-    destino: data.get("destino"),
-    duracion: data.get("duracion"),
-    maniobras: data.get("maniobras"),
-    firma: firma
-  };
-
-  const URL = "https://script.google.com/macros/s/AKfycbzR31gOQf9rhlmGPXW6lcTKe0iKAmqiJ_Mr3Uw67fbl3mlVo6eW8Jt_QIdHfj9SbiigUA/exec";
-
-  try {
-    const res = await fetch(URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const json = await res.json();
-    if (json.success) {
-      alert("Bitácora enviada con éxito.");
-      this.reset();
-      limpiarFirma();
-    } else {
-      alert("Error del servidor: " + json.error);
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y);
     }
-  } catch (err) {
-    alert("Error al enviar: " + err.message);
-  }
-});
+
+    function limpiarFirma() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+
+    document.getElementById("flightForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      document.getElementById("firmaData").value = canvas.toDataURL();
+      const formData = new FormData(this);
+      fetch("https://script.google.com/macros/s/AKfycbyzaCkRQkEaTeLzWcga6N9o1XMDQhPLFfVlFxF2Dx-nm7-_OD0DWoXVwuzxsv3M9QLqNw/exec", {
+        method: "POST",
+        body: formData,
+      })
+      .then(res => res.text())
+      .then(alert)
+      .catch(err => alert("Error: " + err));
+    });
+ 
 
