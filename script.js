@@ -1,29 +1,64 @@
-// --- LÓGICA DEL CANVAS PARA LA FIRMA ---
+// --- LÓGICA DEL CANVAS PARA LA FIRMA (COMPATIBLE CON MOUSE Y TÁCTIL) ---
 const canvas = document.getElementById("firma");
 const ctx = canvas.getContext("2d");
 let isDrawing = false;
 
+// Función para limpiar la firma
 function limpiarFirma() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath(); // Reinicia el trazo para que no continúe un dibujo anterior
 }
 
-canvas.addEventListener("mousedown", (e) => {
-  isDrawing = true;
-  ctx.beginPath();
+// Función para obtener las coordenadas correctas (funciona para mouse y touch)
+function getCoordinates(event) {
   const rect = canvas.getBoundingClientRect();
-  ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-});
-
-canvas.addEventListener("mousemove", (e) => {
-  if (isDrawing) {
-    const rect = canvas.getBoundingClientRect();
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
+  // Si es un evento táctil, usa el primer punto de contacto
+  if (event.touches && event.touches.length > 0) {
+    return {
+      x: event.touches[0].clientX - rect.left,
+      y: event.touches[0].clientY - rect.top
+    };
   }
-});
+  // Si no, es un evento de mouse
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+  };
+}
 
-canvas.addEventListener("mouseup", () => isDrawing = false);
-canvas.addEventListener("mouseout", () => isDrawing = false);
+// Función que se activa al empezar a dibujar
+function startDrawing(event) {
+  isDrawing = true;
+  const { x, y } = getCoordinates(event);
+  ctx.moveTo(x, y);
+}
+
+// Función que dibuja mientras se mueve el puntero/dedo
+function draw(event) {
+  if (!isDrawing) return;
+  // Previene el scroll de la página en móviles al dibujar
+  event.preventDefault(); 
+  const { x, y } = getCoordinates(event);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+}
+
+// Función que se activa al dejar de dibujar
+function stopDrawing() {
+  isDrawing = false;
+  ctx.beginPath(); // Levanta el "lápiz" para el próximo trazo
+}
+
+// Asignar los eventos de Mouse
+canvas.addEventListener("mousedown", startDrawing);
+canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mouseup", stopDrawing);
+canvas.addEventListener("mouseout", stopDrawing); // Si el mouse se sale del canvas
+
+// Asignar los eventos Táctiles
+canvas.addEventListener("touchstart", startDrawing);
+canvas.addEventListener("touchmove", draw);
+canvas.addEventListener("touchend", stopDrawing);
 
 
 // --- FUNCIÓN PARA CONVERTIR ARCHIVO A BASE64 ---
@@ -43,48 +78,43 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
   const submitBtn = document.getElementById("submitBtn");
   const respuestaDiv = document.getElementById("respuesta");
 
+  // Verificar si el canvas está vacío (comparando con un canvas en blanco)
+  const blankCanvas = document.createElement("canvas");
+  blankCanvas.width = canvas.width;
+  blankCanvas.height = canvas.height;
+  if (canvas.toDataURL() === blankCanvas.toDataURL()) {
+      alert("Por favor, añada su firma antes de enviar.");
+      return; // Detiene el envío del formulario
+  }
+
   submitBtn.disabled = true;
   respuestaDiv.innerText = "Procesando y enviando datos...";
 
   try {
-    // 1. Obtener datos del formulario
     const formData = new FormData(this);
     const plainFormData = Object.fromEntries(formData.entries());
-
-    // 2. Procesar la firma
-    if (canvas.toDataURL() === document.createElement('canvas').toDataURL()) {
-        alert("Por favor, añada su firma.");
-        submitBtn.disabled = false;
-        respuestaDiv.innerText = "";
-        return;
-    }
     plainFormData.firmaImagen = canvas.toDataURL("image/png");
 
-    // 3. Procesar la imagen (si se seleccionó una)
     const imagenInput = document.getElementById("imagen");
     if (imagenInput.files.length > 0) {
       plainFormData.imagenBase64 = await fileToBase64(imagenInput.files[0]);
     } else {
-      plainFormData.imagenBase64 = null; // Enviar null si no hay imagen
+      plainFormData.imagenBase64 = null;
     }
     
-    // Eliminar el campo de imagen original que no se puede serializar
     delete plainFormData.imagen;
 
-    // 4. Enviar datos al script de Google
     const response = await fetch("https://script.google.com/macros/s/AKfycbxEWvo4A9_nCGx2KI8skPsL05VzM4dTD7-S7NYwlJ1aTWDWPEMMH-BdTascqnuJUGAoSA/exec", {
       method: "POST",
-      // Redireccionamiento manual para manejar la respuesta del script
       redirect: "follow", 
       body: JSON.stringify(plainFormData),
       headers: {
-        "Content-Type": "text/plain;charset=utf-8", // Usar text/plain es más robusto para doPost
+        "Content-Type": "text/plain;charset=utf-8",
       },
     });
 
     const result = await response.json();
 
-    // 5. Mostrar resultado
     if (result.status === "success") {
       respuestaDiv.innerHTML = `Formulario enviado con éxito. <br> <a href="${result.url}" target="_blank">Ver PDF de la Bitácora</a>`;
       this.reset();
@@ -97,7 +127,6 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
     respuestaDiv.innerText = "Error crítico al enviar el formulario: " + error.message;
     console.error(error);
   } finally {
-    submitBtn.disabled = false; // Reactivar el botón al finalizar
+    submitBtn.disabled = false;
   }
 });
-
