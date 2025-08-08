@@ -5,15 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bitácora de Vuelo</title>
-  <style>
-    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
-    label { display: block; margin-top: 10px; }
-    canvas { border: 1px solid #000; touch-action: none; width: 100%; height: 200px; }
-    button { margin-top: 15px; padding: 10px; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>Bitácora de Vuelo</h2>
+ <div class="container">
+  <header class="container">
+    <img src="logo.png" alt="JAKTECH Logo"  class="logo"/>
+  <h1>Bitácora de Vuelo</h1>
+    <p class="slogan">Ideas que vuelan...</p>
+  </header>  
   <form id="flightForm">
     <label>Fecha: <input type="date" name="fecha" required></label>
     <label>Hora salida: <input type="time" name="horaSalida" required></label>
@@ -25,70 +25,15 @@
     <label>Duración: <input type="text" name="duracion" required></label>
     <label>Maniobras: <textarea name="maniobras" required></textarea></label>
 
-    <label>Firma:</label>
+   <div class="firma">
+   <p>Firma:</p>
     <canvas id="firma"></canvas>
     <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
-
+   </div>
     <input type="hidden" name="firmaData" id="firmaData">
 
     <button type="submit">Enviar</button>
   </form>
-
-  <script>
-    const canvas = document.getElementById('firma');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-
-    const resize = () => {
-      const imageData = canvas.toDataURL();
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0);
-      img.src = imageData;
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; });
-    canvas.addEventListener('touchend', () => drawing = false);
-    canvas.addEventListener('touchmove', draw);
-
-    function draw(e) {
-      if (!drawing) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    }
-
-    function limpiarFirma() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-    }
-
-    document.getElementById("flightForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      document.getElementById("firmaData").value = canvas.toDataURL();
-      const formData = new FormData(this);
-      fetch("https://script.google.com/macros/s/AKfycbyzaCkRQkEaTeLzWcga6N9o1XMDQhPLFfVlFxF2Dx-nm7-_OD0DWoXVwuzxsv3M9QLqNw/exec", {
-        method: "POST",
-        body: formData,
-      })
-      .then(res => res.text())
-      .then(alert)
-      .catch(err => alert("Error: " + err));
-    });
-  </script>
 </body>
 </html>
 
