@@ -43,7 +43,7 @@
       e.preventDefault();
       document.getElementById("firmaData").value = canvas.toDataURL();
       const formData = new FormData(this);
-      fetch("https://script.google.com/macros/s/AKfycbyzaCkRQkEaTeLzWcga6N9o1XMDQhPLFfVlFxF2Dx-nm7-_OD0DWoXVwuzxsv3M9QLqNw/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbyrrKCRr8oGc9L6_MCg3Qzg1_1fAzrHN-x5kxturN5i3lxquZwX7cKz6Rr_0Ef3O57FWg/exec", {
         method: "POST",
         body: formData,
       })
