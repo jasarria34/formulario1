@@ -1,55 +1,62 @@
-    const canvas = document.getElementById('firma');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
 
-    const resize = () => {
-      const imageData = canvas.toDataURL();
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0);
-      img.src = imageData;
-    };
+document.getElementById("bitacoraForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-    window.addEventListener('resize', resize);
-    resize();
+  const canvas = document.getElementById("firma");
+  const firmaBase64 = canvas.toDataURL("image/png");
+  document.getElementById("firmaImagen").value = firmaBase64;
 
-    canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; });
-    canvas.addEventListener('touchend', () => drawing = false);
-    canvas.addEventListener('touchmove', draw);
+  const formData = new FormData(this);
+  const plainFormData = Object.fromEntries(formData.entries());
 
-    function draw(e) {
-      if (!drawing) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    }
+  document.getElementById("respuesta").innerText = "Enviando...";
 
-    function limpiarFirma() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-    }
-
-    document.getElementById("flightForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      document.getElementById("firmaData").value = canvas.toDataURL();
-      const formData = new FormData(this);
-      fetch("https://script.google.com/macros/s/AKfycbyrrKCRr8oGc9L6_MCg3Qzg1_1fAzrHN-x5kxturN5i3lxquZwX7cKz6Rr_0Ef3O57FWg/exec", {
-        method: "POST",
-        body: formData,
-      })
-      .then(res => res.text())
-      .then(alert)
-      .catch(err => alert("Error: " + err));
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxEWvo4A9_nCGx2KI8skPsL05VzM4dTD7-S7NYwlJ1aTWDWPEMMH-BdTascqnuJUGAoSA/exec", {
+      method: "POST",
+      body: JSON.stringify(plainFormData),
+      headers: { "Content-Type": "application/json" },
     });
- 
+
+    const result = await response.json();
+    if (result.status === "success") {
+      document.getElementById("respuesta").innerText = "Formulario enviado con éxito.";
+      this.reset();
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    } else {
+      document.getElementById("respuesta").innerText = "Error: " + result.message;
+    }
+  } catch (error) {
+    document.getElementById("respuesta").innerText = "Error al enviar: " + error.message;
+  }
+});
+
+function limpiarFirma() {
+  const canvas = document.getElementById("firma");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+const canvas = document.getElementById("firma");
+const ctx = canvas.getContext("2d");
+let isDrawing = false;
+
+canvas.addEventListener("mousedown", (e) => {
+  isDrawing = true;
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (isDrawing) {
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+  }
+});
+
+canvas.addEventListener("mouseup", () => {
+  isDrawing = false;
+});
+
 
