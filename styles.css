@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
   background: #f9f9f9;
-  margin: 0;
+  margin: margin: 20px;
   padding: 0;
 }
 
@@ -9,6 +9,23 @@ body {
   max-width: 600px;
   margin: auto;
   padding: 20px;
+}
+canvas {
+  border: 2px solid #000; /* Cuadro visible para la firma */
+  background: #fff;
+  touch-action: none; /* Evita desplazamiento en móviles */
+}
+button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  background: orange;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: darkorange;
 }
 
 .logo {
