@@ -177,3 +177,103 @@ button[type="submit"]:hover {
 .autocomplete-items div:hover {
   background-color: #f1f1f1;
 }
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+header {
+  text-align: center;
+}
+
+.logo {
+  max-width: 100px;
+}
+
+.slogan {
+  color: gray;
+}
+
+form label {
+  display: block;
+  margin-top: 15px;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+button {
+  background: #0099ff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #007acc;
+}
+
+/* Icono de cámara */
+.camera-icon {
+  font-size: 28px;
+  color: #e1306c;
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.file-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Estilo Instagram llamativo */
+.instagram-icon {
+  font-size: 40px;
+  background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.2s;
+}
+
+.instagram-icon:hover {
+  transform: scale(1.2);
+}
+
+/* Lista de autocompletar */
+.autocomplete-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.autocomplete-list li {
+  padding: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.autocomplete-list li:hover {
+  background: #f0f0f0;
+}
