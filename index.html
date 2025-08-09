@@ -1,35 +1,76 @@
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bitácora de Vuelo</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitácora de Vuelos - JAKTECH</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
   <div class="container">
-    <img src="logo.png" class="logo" alt="Logo JAKTECH">
-    <h1>Bitácora de Vuelo</h1>
+    <header>
+      <img src="logo.png" alt="Logo JAKTECH" class="logo" />
+      <h1>Bitácora de Vuelos</h1>
+      <p class="slogan">Ideas que vuelan...</p>
+    </header>
     <form id="bitacoraForm">
-      <input type="date" name="fecha" required>
-      <input type="time" name="hora1" required placeholder="Hora de Salida">
-      <input type="time" name="hora2" required placeholder="Hora de Llegada">
-      <input type="text" name="piloto" placeholder="Piloto" required>
-      <input type="text" name="modelo" placeholder="Modelo de Avión" required>
-      <input type="text" name="origen" placeholder="Origen" required>
-      <input type="text" name="destino" placeholder="Destino" required>
-      <input type="text" name="duracion" placeholder="Duración (HH:MM)" required>
-      <textarea name="maniobras" placeholder="Maniobras realizadas"></textarea>
-      <p>Firma del piloto:</p>
-      <canvas id="firma" width="300" height="100" style="border:1px solid #000"></canvas>
-      <br>
-      <button type="button" onclick="limpiarFirma()">Limpiar firma</button>
-      <br><br>
-      <button type="submit">Enviar Bitácora</button>
+      <label>Fecha: <input type="date" name="fecha" required /></label>
+      <label>Hora Salida: <input type="time" name="horaSalida" id="horaSalida" required /></label>
+      <label>Hora Llegada: <input type="time" name="horaLlegada" id="horaLlegada" required /></label>
+      <label>Piloto: <input type="text" name="piloto" required /></label>
+      
+      <!-- Lista desplegable para Modelo -->
+      <label>Modelo:
+        <select name="modelo" required>
+          <option value="">Seleccione un modelo</option>
+          <option value="A320 NEO">A320 NEO</option>
+          <option value="A320 CEO">A320 CEO</option>
+          <option value="A319">A319</option>
+          <option value="A321 NEO">A321 NEO</option>
+          <option value="A321 CEO">A321 CEO</option>
+        </select>
+      </label>
+
+      <label>Origen: <input type="text" name="origen" required /></label>
+      <label>Destino: <input type="text" name="destino" required /></label>
+      
+      <!-- Duración automática -->
+      <label>Duración: <input type="text" name="duracion" id="duracion" readonly required /></label>
+
+      <label>Maniobras: <textarea name="maniobras" required></textarea></label>
+
+      <label>Firma:
+        <canvas id="firma" width="300" height="100" style="border:1px solid #000;"></canvas>
+      </label>
+      <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
+      
+      <!-- Evidencia fotográfica con icono de cámara -->
+      <label>
+        Evidencia Fotográfica:
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-camera" style="font-size: 24px; color: #555;"></i>
+          <input type="file" name="imagen" id="imagen" accept="image/*" capture="environment" />
+        </div>
+      </label>
+      
+      <input type="hidden" name="firmaImagen" id="firmaImagen" />
+      <input type="hidden" name="imagenBase64" id="imagenBase64" />
+
+      <button type="submit" id="submitBtn">Enviar</button>
     </form>
+
+    <!-- Icono de Instagram debajo del formulario -->
+    <div class="social-links" style="text-align: center; margin-top: 20px;">
+      <a href="https://www.instagram.com/jaktechoficial?igsh=aWFkajkwdm5heHIw" target="_blank" style="text-decoration: none; font-size: 30px; color: #E1306C;">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+
+    <div id="respuesta"></div>
   </div>
+  
   <script src="script.js"></script>
 </body>
 </html>
