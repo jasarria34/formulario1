@@ -50,7 +50,7 @@ canvas.addEventListener("touchstart", startDrawing);
 canvas.addEventListener("touchmove", draw);
 canvas.addEventListener("touchend", stopDrawing);
 
-// --- FUNCIÓN BASE64 ---
+// --- BASE64 ---
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -60,13 +60,70 @@ function fileToBase64(file) {
   });
 }
 
-// --- ENVÍO DE FORMULARIO ---
+// --- API AUTOCOMPLETADO ---
+async function buscarAeropuertos(query, listaElement) {
+  if (query.length < 2) {
+    listaElement.innerHTML = "";
+    return;
+  }
+  const res = await fetch(`https://raw.githubusercontent.com/mwgg/Airports/master/airports.json`);
+  const data = await res.json();
+
+  const resultados = Object.values(data)
+    .filter(a => 
+      a.name.toLowerCase().includes(query.toLowerCase()) ||
+      a.city?.toLowerCase().includes(query.toLowerCase()) ||
+      a.iata?.toLowerCase() === query.toLowerCase() ||
+      a.icao?.toLowerCase() === query.toLowerCase()
+    )
+    .slice(0, 10);
+
+  listaElement.innerHTML = resultados.map(a => 
+    `<li>${a.icao || ''} - ${a.name} (${a.city || ''})</li>`
+  ).join("");
+
+  listaElement.querySelectorAll("li").forEach(item => {
+    item.addEventListener("click", () => {
+      const input = listaElement.previousElementSibling;
+      input.value = item.textContent;
+      listaElement.innerHTML = "";
+    });
+  });
+}
+
+document.getElementById("origen").addEventListener("input", e => {
+  buscarAeropuertos(e.target.value, document.getElementById("origenLista"));
+});
+
+document.getElementById("destino").addEventListener("input", e => {
+  buscarAeropuertos(e.target.value, document.getElementById("destinoLista"));
+});
+
+// --- DURACIÓN ---
+document.getElementById("horaSalida").addEventListener("input", calcularDuracion);
+document.getElementById("horaLlegada").addEventListener("input", calcularDuracion);
+
+function calcularDuracion() {
+  const salida = document.getElementById("horaSalida").value;
+  const llegada = document.getElementById("horaLlegada").value;
+  if (!salida || !llegada) return;
+  const [h1, m1] = salida.split(":").map(Number);
+  const [h2, m2] = llegada.split(":").map(Number);
+
+  let minutos = (h2 * 60 + m2) - (h1 * 60 + m1);
+  if (minutos < 0) minutos += 24 * 60;
+
+  const horas = Math.floor(minutos / 60);
+  const mins = minutos % 60;
+  document.getElementById("duracion").value = `${horas}h ${mins}m`;
+}
+
+// --- ENVÍO FORMULARIO ---
 document.getElementById("bitacoraForm").addEventListener("submit", async function(e) {
   e.preventDefault();
   const submitBtn = document.getElementById("submitBtn");
   const respuestaDiv = document.getElementById("respuesta");
 
-  // Validar que haya firma
   const blankCanvas = document.createElement("canvas");
   blankCanvas.width = canvas.width;
   blankCanvas.height = canvas.height;
@@ -90,30 +147,23 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
 
     delete plainFormData.imagen;
 
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbxEWvo4A9_nCGx2KI8skPsL05VzM4dTD7-S7NYwlJ1aTWDWPEMMH-BdTascqnuJUGAoSA/exec",
-      {
-        method: "POST",
-        redirect: "follow", 
-        body: JSON.stringify(plainFormData),
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-      }
-    );
+    const response = await fetch("https://script.google.com/macros/s/AKfycbxEWvo4A9_nCGx2KI8skPsL05VzM4dTD7-S7NYwlJ1aTWDWPEMMH-BdTascqnuJUGAoSA/exec", {
+      method: "POST",
+      redirect: "follow", 
+      body: JSON.stringify(plainFormData),
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+    });
 
     const result = await response.json();
 
     if (result.status === "success") {
-      // Mostrar el enlace pero solo dejarlo abrir una vez
       respuestaDiv.innerHTML = `<a href="${result.url}" target="_blank" id="pdfLink">📄 Ver PDF de la Bitácora</a>`;
-      
+
       const pdfLink = document.getElementById("pdfLink");
       pdfLink.addEventListener("click", () => {
-        setTimeout(() => {
-          respuestaDiv.innerHTML = ""; // Eliminar enlace
-        }, 1000);
+        setTimeout(() => { respuestaDiv.innerHTML = ""; }, 500);
       });
 
-      // Reset del formulario
       this.reset();
       limpiarFirma();
     } else {
@@ -126,5 +176,6 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
     submitBtn.disabled = false;
   }
 });
+
 
 
