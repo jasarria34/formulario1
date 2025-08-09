@@ -115,7 +115,7 @@ function calcularDuracion() {
 
   const horas = Math.floor(minutos / 60);
   const mins = minutos % 60;
-  document.getElementById("duracion").value = `${horas}: ${mins}`;
+  document.getElementById("duracion").value = `${horas}:${mins}`;
 }
 
 // --- ENVÍO FORMULARIO ---
