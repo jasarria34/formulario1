@@ -64,22 +64,29 @@
       <label>Firma:
         <canvas id="firma" width="300" height="100"></canvas>
       </label>
-      <button type="button" onclick="limpiarFirma()">🧹 Limpiar Firma</button>
+      <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
 
-     <label>Imagen Evidencia:
-  <div style="display: flex; align-items: center; gap: 10px;">
-    <i class="fas fa-camera camera-icon"></i>
-    <input type="file" name="imagen" id="imagen" accept="image/*" capture="environment" />
-  </div>
-</label>
+      <label>Imagen Evidencia:
+         <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-camera" style="font-size: 26px; color: orange; background: #ccc; padding: 6px; border-radius: 8px;"></i>
+          <input type="file" name="imagen" id="imagen" accept="image/*" capture="environment" />
+        </div>
+      </label>
 
-<footer>
-  <div class="social-links" style="text-align: center; margin-top: 20px;">
-    <a href="https://www.instagram.com/jaktechoficial?igsh=aWFkajkwdm5heHIw" target="_blank">
-      <i class="fab fa-instagram instagram-icon"></i>
-    </a>
-  </div>
- </footer>
+      <input type="hidden" name="firmaImagen" id="firmaImagen" />
+      <input type="hidden" name="imagenBase64" id="imagenBase64" />
+
+      <button type="submit" id="submitBtn">Enviar</button>
+    </form>
+
+    <footer>
+      <div class="social-links">
+        <a href="https://www.instagram.com/jaktechoficial?igsh=aWFkajkwdm5heHIw" 
+           target="_blank" class="social-icon instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+    </footer>
 
     <div id="respuesta"></div>
   </div>
@@ -87,4 +94,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
