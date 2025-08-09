@@ -101,6 +101,58 @@ input, select, textarea, button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Header responsivo con logo escalable */
+.site-header{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  flex-wrap: wrap; /* permite que salte si no hay espacio */
+}
+
+/* Logo: usa clamp() para tamaño responsivo, mantiene proporción */
+.site-header .logo {
+  height: clamp(40px, 8vw, 90px); /* mínimo 40px, ideal 8vw, máximo 90px */
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Bloque de título */
+.title-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* evita overflow en flex */
+}
+
+/* Título y subtítulo responsivos */
+.title-block h1 {
+  font-size: clamp(1.1rem, 4vw, 2.2rem); /* se adapta según pantalla */
+  margin: 0;
+  line-height: 1.05;
+}
+
+.title-block .slogan {
+  margin: 4px 0 0;
+  color: #666;
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+}
+
+/* En pantallas muy pequeñas ponemos logo encima del título si hace falta */
+@media (max-width: 420px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .site-header .logo {
+    height: clamp(40px, 12vw, 70px);
+  }
+  .title-block h1 {
+    font-size: 1.2rem;
+  }
+}
+
 /* Ajuste para pantallas pequeñas (celulares) */
 @media (max-width: 600px) {
   #logo {
