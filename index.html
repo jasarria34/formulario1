@@ -1,121 +1,35 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bitácora de Vuelos - JAKTECH</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Librería de íconos Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    form label {
-      display: block;
-      margin-bottom: 10px;
-    }
-    form input,
-    form select,
-    form textarea {
-      display: block;
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    form textarea {
-      resize: vertical;
-    }
-    .file-input-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .file-input-wrapper i {
-      font-size: 24px;
-      color: #0077ff;
-    }
-    .file-input-wrapper input {
-      display: none;
-    }
-    .social-icons {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .social-icons a {
-      margin: 0 10px;
-      color: #333;
-      font-size: 28px;
-      text-decoration: none;
-    }
-    .social-icons a:hover {
-      color: #0077ff;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bitácora de Vuelo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <header>
-      <img src="logo.png" alt="Logo JAKTECH" class="logo" style="max-height: 80px;" />
-      <h1>Bitácora de Vuelos</h1>
-      <p class="slogan">Ideas que vuelan...</p>
-    </header>
+    <img src="logo.png" class="logo" alt="Logo JAKTECH">
+    <h1>Bitácora de Vuelo</h1>
     <form id="bitacoraForm">
-      <label>Fecha: <input type="date" name="fecha" required /></label>
-      <label>Hora Salida: <input type="time" name="horaSalida" required /></label>
-      <label>Hora Llegada: <input type="time" name="horaLlegada" required /></label>
-      <label>Piloto: <input type="text" name="piloto" required /></label>
-      <label>Modelo:
-        <select name="modelo" required>
-          <option value="">Seleccione un modelo</option>
-          <option value="A320 NEO">A320 NEO</option>
-          <option value="A320 CEO">A320 CEO</option>
-          <option value="A319">A319</option>
-          <option value="A321 NEO">A321 NEO</option>
-          <option value="A321 CEO">A321 CEO</option>
-        </select>
-      </label>
-      <label>Origen: <input type="text" name="origen" required /></label>
-      <label>Destino: <input type="text" name="destino" required /></label>
-      <label>Duración: <input type="text" name="duracion" id="duracion" readonly required /></label>
-      <label>Maniobras: <textarea name="maniobras" required></textarea></label>
-      <label>Firma:
-        <canvas id="firma" width="300" height="100" style="border:1px solid #000;"></canvas>
-      </label>
-      <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
-
-      <!-- Campo de imagen con ícono de cámara -->
-      <label>Imagen (Opcional):</label>
-      <div class="file-input-wrapper" onclick="document.getElementById('imagen').click();">
-        <i class="fa-solid fa-camera"></i> <span>Tomar Foto</span>
-        <input type="file" name="imagen" id="imagen" accept="image/*" capture="environment" />
-      </div>
-
-      <input type="hidden" name="firmaImagen" id="firmaImagen" />
-      <input type="hidden" name="imagenBase64" id="imagenBase64" />
-
-      <button type="submit" id="submitBtn">Enviar</button>
+      <input type="date" name="fecha" required>
+      <input type="time" name="hora1" required placeholder="Hora de Salida">
+      <input type="time" name="hora2" required placeholder="Hora de Llegada">
+      <input type="text" name="piloto" placeholder="Piloto" required>
+      <input type="text" name="modelo" placeholder="Modelo de Avión" required>
+      <input type="text" name="origen" placeholder="Origen" required>
+      <input type="text" name="destino" placeholder="Destino" required>
+      <input type="text" name="duracion" placeholder="Duración (HH:MM)" required>
+      <textarea name="maniobras" placeholder="Maniobras realizadas"></textarea>
+      <p>Firma del piloto:</p>
+      <canvas id="firma" width="300" height="100" style="border:1px solid #000"></canvas>
+      <br>
+      <button type="button" onclick="limpiarFirma()">Limpiar firma</button>
+      <br><br>
+      <button type="submit">Enviar Bitácora</button>
     </form>
-
-    <!-- Redes sociales -->
-    <div class="social-icons">
-      <!-- a href="https://wa.me/521234567890" target="_blank"><i class="fab fa-whatsapp"></i></a>
-      <!--a href="https://www.facebook.com/tuempresa" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.instagram.com/jaktechoficial?igsh=aWFkajkwdm5heHIw "></i></a>
-    </div>
-
-    <div id="respuesta"></div>
   </div>
-
-  <script>
-    function limpiarFirma() {
-      const canvas = document.getElementById('firma');
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
-
