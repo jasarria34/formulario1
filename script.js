@@ -130,3 +130,32 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
     submitBtn.disabled = false;
   }
 });
+
+// --- LÓGICA DE CALCULAR HORA 9-28-2025 ---
+document.addEventListener("DOMContentLoaded", () => {
+  const horaSalida = document.getElementById("horaSalida");
+  const horaLlegada = document.getElementById("horaLlegada");
+  const duracion = document.getElementById("duracion");
+
+  function calcularDuracion() {
+    if (horaSalida.value && horaLlegada.value) {
+      const salida = new Date(`1970-01-01T${horaSalida.value}:00`);
+      const llegada = new Date(`1970-01-01T${horaLlegada.value}:00`);
+
+      let diferencia = (llegada - salida) / 1000 / 60; // minutos
+
+      // Si la llegada es al día siguiente
+      if (diferencia < 0) {
+        diferencia += 24 * 60;
+      }
+
+      const horas = Math.floor(diferencia / 60);
+      const minutos = diferencia % 60;
+      duracion.value = `${horas}h ${minutos}m`;
+    }
+  }
+
+  horaSalida.addEventListener("input", calcularDuracion);
+  horaLlegada.addEventListener("input", calcularDuracion);
+});
+
