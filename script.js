@@ -149,9 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
         diferencia += 24 * 60;
       }
 
-      const horas = Math.floor(diferencia / 60);
-      const minutos = diferencia % 60;
-      duracion.value = `${horas}h ${minutos}m`;
+      const horas = String(Math.floor(diferencia / 60)).padStart(2, '0');
+      const minutos = String(diferencia % 60).padStart(2, '0');
+      duracion.value = `${horas}:${minutos}`;
+
     }
   }
 
