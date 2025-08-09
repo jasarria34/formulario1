@@ -277,3 +277,48 @@ button:hover {
 .autocomplete-list li:hover {
   background: #f0f0f0;
 }
+/* Icono cámara: naranja con gris */
+.camera-icon {
+  font-size: 28px; /* Tamaño base */
+  color: orange;
+  filter: drop-shadow(1px 1px 1px gray); /* Detalle gris sutil */
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.camera-icon:hover {
+  transform: scale(1.1);
+  color: darkorange;
+}
+
+/* Icono Instagram con colores oficiales */
+.instagram-icon {
+  font-size: 40px; /* Más llamativo */
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.instagram-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .camera-icon {
+    font-size: 24px;
+  }
+  .instagram-icon {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .camera-icon {
+    font-size: 22px;
+  }
+  .instagram-icon {
+    font-size: 28px;
+  }
+}
