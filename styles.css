@@ -101,7 +101,19 @@ input, select, textarea, button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
+/* Ajuste para pantallas pequeñas (celulares) */
+@media (max-width: 600px) {
+  #logo {
+    height: 50px; /* más pequeño en móvil */
+  }
+  .header {
+    flex-direction: column; /* logo arriba, texto abajo */
+    align-items: flex-start;
+  }
+  .header h1 {
+    font-size: 1.6em; /* título más chico en móvil */
+  }
+}
 
 /* Ajustes responsivos */
 @media (max-width: 768px) {
