@@ -25,6 +25,77 @@ function getCoordinates(event) {
     y: event.clientY - rect.top
   };
 }
+// --- AUTOCOMPLETE DE AEROPUERTOS ---
+const API_URL = "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json"; 
+let aeropuertos = {};
+
+async function cargarAeropuertos() {
+  try {
+    const res = await fetch(API_URL);
+    aeropuertos = await res.json();
+    console.log("Aeropuertos cargados:", Object.keys(aeropuertos).length);
+  } catch (err) {
+    console.error("Error cargando aeropuertos:", err);
+  }
+}
+
+function filtrarAeropuertos(texto) {
+  const busqueda = texto.toLowerCase();
+  return Object.entries(aeropuertos)
+    .filter(([icao, datos]) => {
+      return (
+        icao.toLowerCase().includes(busqueda) ||
+        (datos.iata && datos.iata.toLowerCase().includes(busqueda)) ||
+        (datos.name && datos.name.toLowerCase().includes(busqueda)) ||
+        (datos.city && datos.city.toLowerCase().includes(busqueda))
+      );
+    })
+    .slice(0, 10);
+}
+
+function crearSugerencias(input, lista) {
+  let dropdown = document.createElement("div");
+  dropdown.classList.add("autocomplete-items");
+
+  lista.forEach(([icao, datos]) => {
+    let item = document.createElement("div");
+    item.innerHTML = `<strong>${icao}</strong> - ${datos.name || "Sin nombre"} (${datos.city || "Ciudad desconocida"})`;
+    item.addEventListener("click", () => {
+      input.value = icao;
+      cerrarSugerencias();
+    });
+    dropdown.appendChild(item);
+  });
+
+  cerrarSugerencias();
+  input.parentNode.appendChild(dropdown);
+}
+
+function cerrarSugerencias() {
+  document.querySelectorAll(".autocomplete-items").forEach(el => el.remove());
+}
+
+function activarAutocomplete(idCampo) {
+  const input = document.getElementById(idCampo);
+
+  input.addEventListener("input", () => {
+    const texto = input.value.trim();
+    if (!texto) {
+      cerrarSugerencias();
+      return;
+    }
+    const resultados = filtrarAeropuertos(texto);
+    crearSugerencias(input, resultados);
+  });
+
+  document.addEventListener("click", cerrarSugerencias);
+}
+
+// Inicializar búsqueda
+cargarAeropuertos().then(() => {
+  activarAutocomplete("origen");
+  activarAutocomplete("destino");
+});
 
 // Función que se activa al empezar a dibujar
 function startDrawing(event) {
