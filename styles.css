@@ -5,6 +5,23 @@ body {
   padding: 0;
 }
 
+#logo {
+  height: 80px; /* tamaño más grande */
+  width: auto; /* mantiene proporción */
+  vertical-align: middle;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* espacio entre logo y título */
+}
+
+.header h1 {
+  font-size: 2.2em; /* más grande y destacado */
+  margin: 0;
+}
+
 .container {
   max-width: 600px;
   margin: auto;
