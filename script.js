@@ -230,4 +230,14 @@ document.addEventListener("DOMContentLoaded", () => {
   horaSalida.addEventListener("input", calcularDuracion);
   horaLlegada.addEventListener("input", calcularDuracion);
 });
+if (result.status === "success") {
+  respuestaDiv.innerHTML = `<button id="verPdfBtn">Ver PDF de la Bitácora</button>`;
+  document.getElementById("verPdfBtn").addEventListener("click", () => {
+    window.open(result.url, "_blank");
+    respuestaDiv.innerHTML = "PDF abierto. El enlace ya no está disponible.";
+  });
+
+  this.reset();
+  limpiarFirma();
+}
 
