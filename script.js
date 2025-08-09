@@ -3,6 +3,9 @@ const canvas = document.getElementById("firma");
 const ctx = canvas.getContext("2d");
 let isDrawing = false;
 
+// Evitar scroll en móviles al dibujar
+canvas.style.touchAction = "none";
+
 function limpiarFirma() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.beginPath();
@@ -23,6 +26,7 @@ function getCoordinates(event) {
 }
 
 function startDrawing(event) {
+  event.preventDefault();
   isDrawing = true;
   const { x, y } = getCoordinates(event);
   ctx.moveTo(x, y);
@@ -36,19 +40,21 @@ function draw(event) {
   ctx.stroke();
 }
 
-function stopDrawing() {
+function stopDrawing(event) {
+  event.preventDefault();
   isDrawing = false;
   ctx.beginPath();
 }
 
-canvas.addEventListener("mousedown", startDrawing);
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseup", stopDrawing);
-canvas.addEventListener("mouseout", stopDrawing);
-
-canvas.addEventListener("touchstart", startDrawing);
-canvas.addEventListener("touchmove", draw);
-canvas.addEventListener("touchend", stopDrawing);
+["mousedown", "touchstart"].forEach(evt =>
+  canvas.addEventListener(evt, startDrawing)
+);
+["mousemove", "touchmove"].forEach(evt =>
+  canvas.addEventListener(evt, draw)
+);
+["mouseup", "mouseout", "touchend"].forEach(evt =>
+  canvas.addEventListener(evt, stopDrawing)
+);
 
 // --- BASE64 ---
 function fileToBase64(file) {
@@ -71,7 +77,7 @@ async function buscarAeropuertos(query, listaElement) {
 
   const resultados = Object.values(data)
     .filter(a => 
-      a.name.toLowerCase().includes(query.toLowerCase()) ||
+      a.name?.toLowerCase().includes(query.toLowerCase()) ||
       a.city?.toLowerCase().includes(query.toLowerCase()) ||
       a.iata?.toLowerCase() === query.toLowerCase() ||
       a.icao?.toLowerCase() === query.toLowerCase()
@@ -107,6 +113,7 @@ function calcularDuracion() {
   const salida = document.getElementById("horaSalida").value;
   const llegada = document.getElementById("horaLlegada").value;
   if (!salida || !llegada) return;
+
   const [h1, m1] = salida.split(":").map(Number);
   const [h2, m2] = llegada.split(":").map(Number);
 
@@ -115,7 +122,12 @@ function calcularDuracion() {
 
   const horas = Math.floor(minutos / 60);
   const mins = minutos % 60;
-  document.getElementById("duracion").value = `${horas}:${mins}`;
+
+  // Siempre con formato HH:mm
+  const horasStr = String(horas).padStart(2, "0");
+  const minsStr = String(mins).padStart(2, "0");
+
+  document.getElementById("duracion").value = `${horasStr}:${minsStr}`;
 }
 
 // --- ENVÍO FORMULARIO ---
@@ -124,6 +136,7 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
   const submitBtn = document.getElementById("submitBtn");
   const respuestaDiv = document.getElementById("respuesta");
 
+  // Verificar firma
   const blankCanvas = document.createElement("canvas");
   blankCanvas.width = canvas.width;
   blankCanvas.height = canvas.height;
@@ -158,7 +171,6 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
 
     if (result.status === "success") {
       respuestaDiv.innerHTML = `<a href="${result.url}" target="_blank" id="pdfLink">📄 Ver PDF de la Bitácora</a>`;
-
       const pdfLink = document.getElementById("pdfLink");
       pdfLink.addEventListener("click", () => {
         setTimeout(() => { respuestaDiv.innerHTML = ""; }, 500);
@@ -176,6 +188,3 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
     submitBtn.disabled = false;
   }
 });
-
-
-
