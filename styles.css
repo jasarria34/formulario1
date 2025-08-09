@@ -6,7 +6,7 @@ body {
 }
 
 #logo {
- 
+  height: 40px; /* tamaño más grande */
   width: auto; /* mantiene proporción */
   vertical-align: middle;
 }
