@@ -15,13 +15,28 @@
     </header>
     <form id="bitacoraForm">
       <label>Fecha: <input type="date" name="fecha" required /></label>
-      <label>Hora Salida: <input type="time" name="horaSalida" required /></label>
-      <label>Hora Llegada: <input type="time" name="horaLlegada" required /></label>
+      <label>Hora Salida: <input type="time" name="horaSalida" id="horaSalida" required /></label>
+      <label>Hora Llegada: <input type="time" name="horaLlegada" id="horaLlegada" required /></label>
       <label>Piloto: <input type="text" name="piloto" required /></label>
-      <label>Modelo: <input type="text" name="modelo" required /></label>
+      
+      <!-- Lista desplegable para Modelo -->
+      <label>Modelo:
+        <select name="modelo" required>
+          <option value="">Seleccione un modelo</option>
+          <option value="A320 NEO">A320 NEO</option>
+          <option value="A320 CEO">A320 CEO</option>
+          <option value="A319">A319</option>
+          <option value="A321 NEO">A321 NEO</option>
+          <option value="A321 CEO">A321 CEO</option>
+        </select>
+      </label>
+
       <label>Origen: <input type="text" name="origen" required /></label>
       <label>Destino: <input type="text" name="destino" required /></label>
-      <label>Duración: <input type="text" name="duracion" required /></label>
+      
+      <!-- Duración automática -->
+      <label>Duración: <input type="text" name="duracion" id="duracion" readonly required /></label>
+
       <label>Maniobras: <textarea name="maniobras" required></textarea></label>
       <label>Firma:
         <canvas id="firma" width="300" height="100" style="border:1px solid #000;"></canvas>
