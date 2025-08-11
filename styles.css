@@ -45,8 +45,10 @@ button:hover {
   background: darkorange;
 }
 
+/* Logo más grande pero responsivo */
 .logo {
-  max-width: 100px;
+  height: 80px; /* Antes estaba más pequeño */
+  max-width: 100%;
 }
 
 h1 {
@@ -152,11 +154,18 @@ input, select, textarea, button {
     font-size: 1.2rem;
   }
 }
+/* Hora actual junto a la firma */
+.hora-actual {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+}
 
 /* Ajuste para pantallas pequeñas (celulares) */
 @media (max-width: 600px) {
-  #logo {
-    height: 50px; /* más pequeño en móvil */
+  .logo {
+    height: 60px; /* más pequeño en móvil */
   }
   .header {
     flex-direction: column; /* logo arriba, texto abajo */
