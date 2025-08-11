@@ -72,6 +72,14 @@
           <i class="fas fa-camera" style="font-size: 26px; color: orange; background: #ccc; padding: 6px; border-radius: 8px;"></i>
           <input type="file" name="imagen" id="imagen" accept="image/*" capture="environment" />
         </div>
+        <label>Firma: </label>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+  <canvas id="firma" width="300" height="100"></canvas>     
+  <button type="button" onclick="limpiarFirma()">Limpiar Firma</button>
+  
+  <!-- Hora actual al lado de la firma -->
+  <div class="hora-actual" id="fechaHora"></div>
+</div>
       </label>
 
       <input type="hidden" name="firmaImagen" id="firmaImagen" />
