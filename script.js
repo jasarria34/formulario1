@@ -188,3 +188,13 @@ document.getElementById("bitacoraForm").addEventListener("submit", async functio
     submitBtn.disabled = false;
   }
 });
+function actualizarFechaHora() {
+  const fechaHoraElemento = document.getElementById('fechaHora');
+  const ahora = new Date();
+  const fecha = ahora.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const hora = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  fechaHoraElemento.textContent = `${fecha} - ${hora}`;
+}
+setInterval(actualizarFechaHora, 1000);
+actualizarFechaHora();
+
